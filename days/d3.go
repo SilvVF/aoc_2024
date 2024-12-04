@@ -27,21 +27,21 @@ func NewDay3() Day {
 	return &Day3{}
 }
 
-type Day3 struct {}
+type Day3 struct{}
 
 func (d *Day3) Num() int {
 	return 3
 }
 
 func (d *Day3) Part1(input []string) int {
-	return parseTokens(strings.Join(input, ""), false)
+	return d.parseTokens(strings.Join(input, ""), false)
 }
 
 func (d *Day3) Part2(input []string) int {
-	return parseTokens(strings.Join(input, ""), true)
+	return d.parseTokens(strings.Join(input, ""), true)
 }
 
-func parseTokens(input string, useEnableCmd bool) int {
+func (d *Day3) parseTokens(input string, useEnableCmd bool) int {
 
 	tokens := []Token{}
 	enabled := true
@@ -70,7 +70,7 @@ func parseTokens(input string, useEnableCmd bool) int {
 			tokens = append(tokens, Token{Raw: "(", Type: OPEN})
 		case c == ")":
 			tokens = append(tokens, Token{Raw: ")", Type: CLOSE})
-			if len(tokens) == 6 && (!useEnableCmd || enabled) && check(tokens[1:]) {
+			if len(tokens) == 6 && (!useEnableCmd || enabled) && d.check(tokens[1:]) {
 				n1, _ := strconv.Atoi(tokens[2].Raw)
 				n2, _ := strconv.Atoi(tokens[4].Raw)
 				t += n1 * n2
@@ -93,6 +93,6 @@ func parseTokens(input string, useEnableCmd bool) int {
 	return t
 }
 
-func check(arr []Token) bool {
+func (d *Day3) check(arr []Token) bool {
 	return arr[0].Type == OPEN && arr[1].Type == NUM && arr[2].Type == SEP && arr[3].Type == NUM && arr[4].Type == CLOSE
 }
