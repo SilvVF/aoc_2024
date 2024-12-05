@@ -4,18 +4,18 @@ import Day
 import days.Target.*
 import java.util.Collections.addAll
 
-private fun parseInput(input: List<String>): Pair<Map<Int, Set<Int>>, List<List<Int>>> {
-    val rules = mutableMapOf<Int, Set<Int>>()
-    val inputs = mutableListOf<List<Int>>()
+private fun parseInput(input: List<String>): Pair<Map<Int, Set<Int>>, List<IntArray>> {
+    val rules = mutableMapOf<Int, MutableSet<Int>>()
+    val inputs = mutableListOf<IntArray>()
 
     input.forEach { line ->
         when {
             line.contains("|") -> {
                 val (num, rule) = line.split("|").map { it.toInt() }
-                rules[num] = rules.getOrDefault(num, emptySet()) + rule
+                rules[num] = rules.getOrDefault(num, mutableSetOf()).apply { add(rule) }
             }
             line.contains(",") -> {
-                val values = line.split(",").map { it.toInt() }
+                val values = line.split(",").map { it.toInt() }.toIntArray()
                 inputs.add(values)
             }
         }
@@ -24,7 +24,7 @@ private fun parseInput(input: List<String>): Pair<Map<Int, Set<Int>>, List<List<
     return rules to inputs
 }
 
-private fun fillFromLeft(src: List<Int>, dst: IntArray, rules: Map<Int, Set<Int>>): Int {
+private fun fillFromLeft(src: IntArray, dst: IntArray, rules: Map<Int, Set<Int>>): Int {
    var filled = 0
    for ((idx, x) in src.withIndex()) {
        val valid = src.slice(idx..src.lastIndex).all { y ->
@@ -37,7 +37,7 @@ private fun fillFromLeft(src: List<Int>, dst: IntArray, rules: Map<Int, Set<Int>
     return filled
 }
 
-private fun fillFromRight(src: List<Int>, dst: IntArray, rules: Map<Int, Set<Int>>): Int {
+private fun fillFromRight(src: IntArray, dst: IntArray, rules: Map<Int, Set<Int>>): Int {
     var filled = 0
     for (i in src.indices.reversed()) {
         val valid = src.slice(0..i).all { y ->
@@ -64,13 +64,10 @@ private fun countInputs(target: Target, input: List<String>): Int {
 
         val copy = IntArray(arr.size) { 0 }
 
-        var left = 0
-        var right = copy.lastIndex
+        val left = fillFromLeft(arr, copy, rules)
+        val right = copy.lastIndex - fillFromRight(arr, copy, rules)
 
-        left = fillFromLeft(arr, copy, rules)
-        right -= fillFromRight(arr, copy, rules)
-        
-        if (arr == copy.toList()) {
+        if (arr.contentEquals(copy)) {
             total += when(target) {
                 VALID -> copy[copy.size/2]
                 else -> 0
@@ -78,12 +75,11 @@ private fun countInputs(target: Target, input: List<String>): Int {
             continue
         }
 
-        val currRules = buildMap {
-            putAll(
-                arr.slice(left..right).map { it to (rules[it] ?: emptySet()) }
-            )
-        }.toMutableMap()
-
+        val currRules = mutableMapOf<Int, Set<Int>>().apply {
+            arr.slice(left..right).forEach {
+                this[it] = rules[it] ?: emptySet()
+            }
+        }
         for (i in left..right) {
             for (key in currRules.keys) {
                 if(currRules.values.none { it.contains(key) }) {
