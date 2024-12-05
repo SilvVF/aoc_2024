@@ -1,7 +1,4 @@
-import days.Day1
-import days.Day2
-import days.Day3
-import days.Day4
+import days.*
 import java.io.File
 
 interface Day {
@@ -16,10 +13,11 @@ fun main(args: Array<String>) {
         Day1,
         Day2,
         Day3,
-        Day4
+        Day4,
+        Day5
     )
 
-    val day = args.getOrNull(0)?.toIntOrNull() ?: 4
+    val day = args.getOrNull(0)?.toIntOrNull() ?: 5
     val debug = args.getOrNull(1)?.toBoolean() ?: false
 
     val file = File("C:\\Users\\david\\dev\\aoc\\inputs\\d${day}${if (debug) "test" else ""}.txt")
