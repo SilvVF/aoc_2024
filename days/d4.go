@@ -2,7 +2,7 @@ package days
 
 import "strings"
 
-func NewDay4() Day {
+func NewDay4() Day[int] {
 	return &Day4{}
 }
 

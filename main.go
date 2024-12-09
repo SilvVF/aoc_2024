@@ -10,30 +10,54 @@ import (
 
 func main() {
 
-	daysArr := []days.Day{
+	daysArr := []any{
 		days.NewDay1(),
 		days.NewDay2(),
 		days.NewDay3(),
 		days.NewDay4(),
 		days.NewDay5(),
 		days.NewDay6(),
+		days.NewDay7(),
 	}
 
 	run := func(d int, test bool) {
+
 		day := daysArr[d-1]
 
-		var path string
-		if test {
-			path = fmt.Sprintf("d%d%s.txt", day.Num(), "test")
-		} else {
-			path = fmt.Sprintf("d%d.txt", day.Num())
+		var input []string
+
+		fillInput := func(num int) {
+			var path string
+			if test {
+				path = fmt.Sprintf("d%d%s.txt", num, "test")
+			} else {
+				path = fmt.Sprintf("d%d.txt", num)
+			}
+			input = readLines(filepath.Join("inputs", path))
 		}
-		input := readLines(filepath.Join("inputs", path))
-		fmt.Printf("Part 1: %d\n", day.Part1(input))
-		fmt.Printf("Part 2: %d\n", day.Part2(input))
+
+		output := func(p1 any, p2 any) {
+			fmt.Printf("Part 1: %v\n", p1)
+			fmt.Printf("Part 2: %v\n", p2)
+		}
+
+		switch day := day.(type) {
+		case days.Day[int]:
+			fillInput(day.Num())
+			p1 := day.Part1(input)
+			p2 := day.Part2(input)
+			output(p1, p2)
+		case days.Day[int64]:
+			fillInput(day.Num())
+			p1 := day.Part1(input)
+			p2 := day.Part2(input)
+			output(p1, p2)
+
+		}
+
 	}
 
-	run(6, false)
+	run(7, false)
 }
 
 func readLines(path string) []string {

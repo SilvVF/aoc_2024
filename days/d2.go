@@ -7,7 +7,7 @@ import (
 
 type Day2 struct{}
 
-func NewDay2() Day {
+func NewDay2() Day[int] {
 	return &Day2{}
 }
 

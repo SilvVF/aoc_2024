@@ -3,8 +3,8 @@ import java.io.File
 
 interface Day {
     val day: Int
-    fun part1(input: List<String>): Int
-    fun part2(input: List<String>): Int
+    fun part1(input: List<String>): Number
+    fun part2(input: List<String>): Number
 }
 
 fun main(args: Array<String>) {
@@ -15,10 +15,11 @@ fun main(args: Array<String>) {
         Day3,
         Day4,
         Day5,
-        Day6
+        Day6,
+        Day7
     )
 
-    val day = args.getOrNull(0)?.toIntOrNull() ?: 6
+    val day = args.getOrNull(0)?.toIntOrNull() ?: 7
     val debug = args.getOrNull(1)?.toBoolean() ?: false
 
     val file = File("C:\\Users\\david\\dev\\aoc\\inputs\\d${day}${if (debug) "test" else ""}.txt")

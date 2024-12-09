@@ -23,7 +23,7 @@ type Token struct {
 	Type TokenType
 }
 
-func NewDay3() Day {
+func NewDay3() Day[int] {
 	return &Day3{}
 }
 

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func NewDay1() Day {
+func NewDay1() Day[int] {
 	return &Day1{}
 }
 
