@@ -10,16 +10,17 @@ import (
 
 func main() {
 
-	days := []days.Day{
+	daysArr := []days.Day{
 		days.NewDay1(),
 		days.NewDay2(),
 		days.NewDay3(),
 		days.NewDay4(),
 		days.NewDay5(),
+		days.NewDay6(),
 	}
 
 	run := func(d int, test bool) {
-		day := days[d-1]
+		day := daysArr[d-1]
 
 		var path string
 		if test {
@@ -30,11 +31,9 @@ func main() {
 		input := readLines(filepath.Join("inputs", path))
 		fmt.Printf("Part 1: %d\n", day.Part1(input))
 		fmt.Printf("Part 2: %d\n", day.Part2(input))
-
-		day.Part2(input)
 	}
 
-	run(5, false)
+	run(6, false)
 }
 
 func readLines(path string) []string {

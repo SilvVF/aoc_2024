@@ -30,3 +30,15 @@ func removeCpy(slice []int, s int) []int {
 	}
 	return new
 }
+
+// Index returns the index of the first occurrence of v in s,
+// or -1 if not present.
+func IndexLast[S ~[]E, E comparable](s S, v E) int {
+	for i := range s {
+		idx := len(s) - 1 - i
+		if v == s[idx] {
+			return idx
+		}
+	}
+	return -1
+}
