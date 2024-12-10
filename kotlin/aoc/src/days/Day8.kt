@@ -10,7 +10,6 @@ data class Node (
     val anti: MutableList<Char> = mutableListOf()
 )
 
-
 object Day8: Day {
     override val day: Int = 8
 
