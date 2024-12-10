@@ -19,9 +19,10 @@ fun main(args: Array<String>) {
         Day7,
         Day8,
         Day9,
+        Day10
     )
 
-    val day = args.getOrNull(0)?.toIntOrNull() ?: 9
+    val day = args.getOrNull(0)?.toIntOrNull() ?: 10
     val debug = args.getOrNull(1)?.toBoolean() ?: false
 
     val file = File("C:\\Users\\david\\dev\\aoc\\inputs\\d${day}${if (debug) "test" else ""}.txt")
