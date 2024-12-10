@@ -20,6 +20,7 @@ func main() {
 		days.NewDay7(),
 		days.NewDay8(),
 		days.NewDay9(),
+		days.NewDay10(),
 	}
 
 	run := func(d int, test bool) {
@@ -58,7 +59,7 @@ func main() {
 		}
 	}
 
-	run(9, false)
+	run(10, false)
 }
 
 func readLines(path string) []string {
