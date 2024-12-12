@@ -5,7 +5,7 @@ import Day
 object Day10: Day {
     override val day: Int = 10
 
-    fun buildGrid(input: List<String>): List<List<Int>> {
+    private fun buildGrid(input: List<String>): List<List<Int>> {
         return input.map { line ->
             line.map { c -> c.digitToInt() }
         }

@@ -4,13 +4,18 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"sync"
 )
 
-type Day11 struct{}
+type Day11 struct {
+	blinks int
+	cache  map[int]map[int64]int
+}
 
 func NewDay11() Day[int] {
-	return &Day11{}
+	return &Day11{
+		blinks: 25,
+		cache:  map[int]map[int64]int{},
+	}
 }
 
 func (d *Day11) Num() int {
@@ -29,70 +34,53 @@ func (d *Day11) parseInput(input []string) []int64 {
 	return arr
 }
 
+func (d *Day11) getNext(stone int64, iter int) int {
+
+	if iter == 0 {
+		return 1
+	}
+
+	if m, ok := d.cache[iter]; ok {
+		if v, ok := m[stone]; ok {
+			return v
+		}
+	}
+
+	if stone == 0 {
+		v := d.getNext(1, iter-1)
+		d.cache[iter][stone] = v
+		return v
+	}
+	str := fmt.Sprint(stone)
+	if len(str)%2 == 0 {
+		l, _ := strconv.ParseInt(str[0:len(str)/2], 10, 64)
+		r, _ := strconv.ParseInt(str[len(str)/2:], 10, 64)
+
+		v := d.getNext(l, iter-1) + d.getNext(r, iter-1)
+		d.cache[iter][stone] = v
+		return v
+	}
+
+	v := d.getNext(stone*int64(2024), iter-1)
+	d.cache[iter][stone] = v
+	return v
+}
+
 func (d *Day11) Part1(input []string) int {
 	stones := d.parseInput(input)
 
-	blinks := 25
-	for i := 0; i < blinks; i++ {
-		cpy := []int64{}
-		for _, stone := range stones {
+	total := 0
 
-			if stone == 0 {
-				cpy = append(cpy, 1)
-				continue
-			}
-			str := fmt.Sprint(stone)
-			if len(str)%2 == 0 {
-				l, _ := strconv.ParseInt(str[0:len(str)/2], 10, 64)
-				r, _ := strconv.ParseInt(str[len(str)/2:], 10, 64)
-
-				cpy = append(cpy, l, r)
-				continue
-			}
-
-			cpy = append(cpy, int64(stone*2024))
-		}
-		stones = cpy
+	for i := range d.blinks + 1 {
+		d.cache[i] = map[int64]int{}
 	}
-
-	return len(stones)
+	for _, stone := range stones {
+		total += d.getNext(stone, d.blinks)
+	}
+	return total
 }
 
 func (d *Day11) Part2(input []string) int {
-	stones := d.parseInput(input)
-	blinks := 75
-	total := 0
-	wg := sync.WaitGroup{}
-	for _, start := range stones {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			prev := []int64{start}
-			curr := []int64{}
-
-			for i := 0; i < blinks; i++ {
-				for _, stone := range prev {
-					if stone == 0 {
-						curr = append(curr, 1)
-						continue
-					}
-					str := fmt.Sprint(stone)
-					if len(str)%2 == 0 {
-						l, _ := strconv.ParseInt(str[0:len(str)/2], 10, 64)
-						r, _ := strconv.ParseInt(str[len(str)/2:], 10, 64)
-
-						curr = append(curr, l, r)
-						continue
-					}
-
-					curr = append(curr, int64(stone*2024))
-				}
-				prev = curr
-				curr = []int64{}
-			}
-			total += len(prev)
-		}()
-	}
-	wg.Wait()
-	return total
+	d.blinks = 75
+	return d.Part1(input)
 }
